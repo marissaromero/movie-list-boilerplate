@@ -1,0 +1,13 @@
+.box {
+  float: center;
+  border-bottom: 1px solid #000000;
+  padding:10px 20px 20px;
+}
+
+.outer {
+  width: 75%;
+  border-top: 1px solid black;
+  border-right: 1px solid black;
+  border-left: 1px solid black;
+
+}
