@@ -1,5 +1,4 @@
 .box {
-  float: center;
   border-bottom: 1px solid #000000;
   padding:10px 20px 20px;
 }
@@ -11,3 +10,27 @@
   border-left: 1px solid black;
 
 }
+
+.white_button {
+  background-color: white;
+  border: 1px solid green;
+  color: green'
+}
+
+.green_button {
+  background-color: green;
+  color:white;
+}
+
+/* #divLeft {
+  width: 45%;
+  float: left;
+  padding: 10px;
+}
+
+#divRight {
+  width: 45%;
+  float: right;
+  padding: 10px;
+} */
+

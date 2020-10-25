@@ -1,4 +1,5 @@
 import React from 'react';
+import WatchedButton from './WatchedButton.jsx'
 
 class MovieList extends React.Component {
 
@@ -12,7 +13,11 @@ class MovieList extends React.Component {
       <div >
         <div className="outer">
         {this.props.movies.map ((movie, idx) => (
-        <p key={movie.title+idx} className="box">{movie.title}</p>
+        <div>
+        <p key={movie.title+idx} className="box" id="divLeft"> {movie.title}
+        <WatchedButton id="divRight" watched={movie.watched} adjustWatched = {this.props.adjustWatched} title = {movie.title} index = {idx}/>
+        </p>
+        </div>
         ))}
         </div>
       </div>
