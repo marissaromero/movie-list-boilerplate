@@ -23,14 +23,13 @@ class WatchedButton extends React.Component {
       this.setState ({
         buttonStyle: 'green_button'
       })
-      console.log('i made it pass here')
     } else {
       this.setState ({
         buttonStyle: 'white_button'
       })
     }
 
-    var newMovieObj = {'title': this.props.title, 'watched' : this.state.watched}
+    var newMovieObj = {title: this.props.title, watched: this.state.watched, runtime: this.props.runtime, imdbRating: this.props.imdbRating, year: this.props.year}
     this.props.adjustWatched(newMovieObj, this.props.index)
   }
 

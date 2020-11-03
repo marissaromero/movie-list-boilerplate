@@ -4,6 +4,12 @@ import Search from './Search.jsx'
 import AddMovie from './AddMovie.jsx'
 import WatchFilters from './WatchFilters.jsx'
 
+var movies = [
+  {title: "Mean Girls", watched: 'false', year: '1995', runtime: '107 min' , metascore: 46, imdbRating: 6.2},
+  {title: "The Outsiders", watched: 'false', year: '1995', runtime: '107 min' , metascore: 46, imdbRating: 6.2},
+  {title: "Home Alone", watched: 'false', year: '1995', runtime: '107 min' , metascore: 46, imdbRating: 6.2}
+]
+
 
 
 class App extends React.Component {
@@ -12,7 +18,7 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      movies: [],
+      movies: movies,
     }
     this.filter = this.filter.bind(this);
     this.addMovie = this.addMovie.bind(this);
@@ -36,6 +42,7 @@ class App extends React.Component {
     const filteredMovies = [];
     for (var i = 0; i < this.state.movies.length; i++) {
       if (this.state.movies[i].watched.toString() === watched) {
+        console.log('inside filtered movies')
         filteredMovies.push(this.state.movies[i]);
       }
     }
@@ -46,7 +53,7 @@ class App extends React.Component {
 
 
   addMovie(movie) {
-    var movieObj = {'title': movie, 'watched': false}
+    var movieObj = {title: movie, watched: false, runtime: 112, imdbRating: 12, year: 1995}
     const newMovieList = [...this.state.movies]
     newMovieList.push(movieObj)
     this.setState({
@@ -68,7 +75,7 @@ class App extends React.Component {
       <div>
       <h1>MovieList</h1>
       <AddMovie addMovie = {this.addMovie}/>
-      <WatchFilters watchFilter1 = {this.watchFilter}/>
+      <WatchFilters watchFilter = {this.watchFilter}/>
       <Search filter={this.filter}/>
       <br/>
       <MovieList movies = {this.state.movies} adjustWatched={this.adjustWatched}/>

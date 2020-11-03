@@ -12,14 +12,21 @@
 }
 
 .white_button {
-  background-color: white;
-  border: 1px solid green;
-  color: green'
+  display: inline-block;
+  height: 13px;
+  width: 13px;
+  border-radius: 100%;
+  border: 1px solid grey;
+
 }
 
 .green_button {
-  background-color: green;
-  color:white;
+  display: inline-block;
+  height: 13px;
+  width: 13px;
+  border-radius: 100%;
+  background-color: grey;
+  border: 1px solid grey;
 }
 
 /* #divLeft {

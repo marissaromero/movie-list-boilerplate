@@ -9,7 +9,7 @@ class WatchFilters extends React.Component {
   }
 
   runFilter (event) {
-    this.props.watchFilter1(event.target.value)
+    this.props.watchFilter(event.target.value)
   }
 
 
@@ -20,7 +20,7 @@ class WatchFilters extends React.Component {
       Watched
       </button>
       <button className='toWatch' onClick={this.runFilter} value = 'false'>
-      To Watched
+      To Watch
       </button>
       </div>
     )
