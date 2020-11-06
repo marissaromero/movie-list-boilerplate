@@ -5,7 +5,7 @@ class AddMovie extends React.Component {
     super(props);
 
     this.state = {
-      value: '',
+      value: ''
     };
 
     this.handleChange=this.handleChange.bind(this);
@@ -14,15 +14,18 @@ class AddMovie extends React.Component {
 
 
   handleChange(event) {
+    console.log(event.target.value)
     this.setState({
       value: event.target.value
     });
   }
 
 
-  handleSubmit(event) {
-    this.props.addMovie(this.state.value)
+  handleSubmit() {
     event.preventDefault();
+    console.log(this.state.value)
+    this.props.addMovie(this.state.value)
+
   }
 
 

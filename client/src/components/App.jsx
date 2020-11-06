@@ -5,9 +5,9 @@ import AddMovie from './AddMovie.jsx'
 import WatchFilters from './WatchFilters.jsx'
 
 var movies = [
-  {title: "Mean Girls", watched: 'false', year: '1995', runtime: '107 min' , metascore: 46, imdbRating: 6.2},
-  {title: "The Outsiders", watched: 'false', year: '1995', runtime: '107 min' , metascore: 46, imdbRating: 6.2},
-  {title: "Home Alone", watched: 'false', year: '1995', runtime: '107 min' , metascore: 46, imdbRating: 6.2}
+  {title: "Mean Girls1", watched: 'false', year: '1995', runtime: '107 min' , metascore: 46, imdbRating: 6.2, buttonStyle: 'white_button'},
+  {title: "The Outsiders", watched: 'false', year: '1995', runtime: '107 min' , metascore: 46, imdbRating: 6.2, buttonStyle: 'white_button'},
+  {title: "Home Alone", watched: 'false', year: '1995', runtime: '107 min' , metascore: 46, imdbRating: 6.2, buttonStyle: 'white_button'}
 ]
 
 
@@ -19,12 +19,70 @@ class App extends React.Component {
 
     this.state = {
       movies: movies,
+      renderedMovies: movies,
+      movieId: '',
     }
     this.filter = this.filter.bind(this);
     this.addMovie = this.addMovie.bind(this);
     this.adjustWatched = this.adjustWatched.bind(this);
     this.watchFilter= this.watchFilter.bind(this);
   }
+
+
+
+
+
+
+//is this the proper way to get API information
+//how to be able to access without using states?
+  addMovie(movie) {
+
+    //search for movie ID
+    var urlMovieId = `https://api.themoviedb.org/3/search/movie?api_key=7fdb726f9ddada6e78cdde82cb44be0b&language=en-US&query=${movie}`
+    fetch(urlMovieId)
+    .then(res => res.json())
+    .then(
+      (result) => {
+        this.setState ({
+          movieId: result.results[0].id
+        }, () => {
+          var urlMovieDetails = `https://api.themoviedb.org/3/movie/${this.state.movieId}?api_key=7fdb726f9ddada6e78cdde82cb44be0b&language=en-US`
+          fetch(urlMovieDetails)
+          .then(res => res.json())
+          .then( (result) => {
+
+            var movieObj = {
+              title: result.title,
+              watched: 'false',
+              year: result.release_date.substring(0,4),
+              runtime: result.runtime,
+              metascore: 12.3,
+              imdbRating: result.vote_average,
+              buttonStyle: 'white_button'
+            }
+            const newMovieList = [...this.state.movies]
+            newMovieList.push(movieObj)
+            this.setState({
+              movies: newMovieList
+            })
+          })
+        })
+    },
+      (error) => {
+        console.log(error)
+      }
+    )
+
+
+
+
+
+
+  }
+
+
+
+
 
   filter(searchPhrase) {
     const filteredMovies = [];
@@ -34,30 +92,20 @@ class App extends React.Component {
       }
     }
     this.setState({
-      movies: filteredMovies,
+      renderedMovies: filteredMovies,
     })
   }
+
   //takes in true or false
   watchFilter(watched) {
     const filteredMovies = [];
     for (var i = 0; i < this.state.movies.length; i++) {
       if (this.state.movies[i].watched.toString() === watched) {
-        console.log('inside filtered movies')
         filteredMovies.push(this.state.movies[i]);
       }
     }
     this.setState({
-      movies: filteredMovies,
-    })
-  }
-
-
-  addMovie(movie) {
-    var movieObj = {title: movie, watched: false, runtime: 112, imdbRating: 12, year: 1995}
-    const newMovieList = [...this.state.movies]
-    newMovieList.push(movieObj)
-    this.setState({
-      movies: newMovieList
+      renderedMovies: filteredMovies,
     })
   }
 

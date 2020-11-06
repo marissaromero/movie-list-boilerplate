@@ -5,19 +5,28 @@ class InfoPanel extends React.Component {
     super(props)
 
     this.state = {
-      watched: this.props.watched,
-      buttonStyle: 'white_button',
+      watched: this.props.movie.watched,
+      buttonStyle: this.props.movie.buttonStyle,
     }
 
     this.toggleWatched = this.toggleWatched.bind(this);
   }
 
+
+
   toggleWatched () {
-    //toggle true of false
-    this.setState ({
-      watched: !this.state.watched
-    })
-    if (this.state.watched) {
+    if (this.state.watched === 'false') {
+      this.setState ({
+      watched: 'true'
+      })
+    } else {
+      this.setState ({
+        watched: 'false'
+        })
+
+    }
+
+    if (this.state.watched === 'true') {
       this.setState ({
         buttonStyle: 'green_button'
       })
@@ -27,18 +36,29 @@ class InfoPanel extends React.Component {
       })
     }
 
-    var newMovieObj = {title: this.props.title, watched: this.state.watched, runtime: this.props.runtime, metascore: this.props.metascore, imdbRating: this.props.imdbRating, year: this.props.year}
+    var newMovieObj = {
+      title: this.props.movie.title,
+      watched: this.state.watched,
+      year: this.props.movie.year,
+      runtime: this.props.movie.runtime,
+      metascore: this.props.movie.metascore,
+      imdbRating: this.props.movie.imdbRating,
+      buttonStyle: this.state.buttonStyle
+    }
+
     this.props.adjustWatched(newMovieObj, this.props.index)
+
+
   }
 
   render() {
     return (
       <div>
-        <span>Year:{this.props.year}</span><br/>
-        <span>Runtime:{this.props.runtime}</span><br/>
-        <span>Metascore:{this.props.metascore}</span><br/>
-        <span>imdbRating:{this.props.imdbRating}</span><br/>
-        <span>Watched  <button className = {this.state.buttonStyle} onClick={this.toggleWatched}id='watched'></button>
+        <span>Year:{this.props.movie.year}</span><br/>
+        <span>Runtime:{this.props.movie.runtime}</span><br/>
+        <span>Metascore:{this.props.movie.metascore}</span><br/>
+        <span>imdbRating:{this.props.movie.imdbRating}</span><br/>
+        <span>Watched  <button className = {this.state.buttonStyle} onClick={this.toggleWatched} id='watched'></button>
         </span>
       </div>
 

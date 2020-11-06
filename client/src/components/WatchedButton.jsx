@@ -16,9 +16,11 @@ class WatchedButton extends React.Component {
 
   toggleWatched () {
     //toggle true of false
+    console.log('initial watch status:', this.state.watched, typeof this.state.watched)
     this.setState ({
       watched: !this.state.watched
     })
+    console.log('after watch status:', this.state.watched, typeof this.state.watched)
     if (this.state.watched) {
       this.setState ({
         buttonStyle: 'green_button'

@@ -1,6 +1,6 @@
 import React from 'react';
 import WatchedButton from './WatchedButton.jsx'
-import InfoPanel from './InfoPanel'
+import Movie from './Movie.jsx'
 
 class MovieList extends React.Component {
 
@@ -13,12 +13,8 @@ class MovieList extends React.Component {
     return (
       <div >
         <div className="outer">
-        {this.props.movies.map ((movie, idx) => (
-        <div>
-        <h5 key={movie.title+idx} className="box" id="divLeft"> {movie.title}
-        <InfoPanel id="divRight" watched={movie.watched} adjustWatched = {this.props.adjustWatched} title = {movie.title} index = {idx} year={movie.year} runtime={movie.runtime} metascore={movie.metascore} imdbRating = {movie.imdbRating}/>
-        </h5>
-        </div>
+        {this.props.movies.map ((movie, index) => (
+          <Movie movie={movie} index ={index} adjustWatched={this.props.adjustWatched}/>
         ))}
         </div>
       </div>
