@@ -14,18 +14,15 @@ class AddMovie extends React.Component {
 
 
   handleChange(event) {
-    console.log(event.target.value)
     this.setState({
       value: event.target.value
     });
   }
 
 
-  handleSubmit() {
+  handleSubmit(event) {
     event.preventDefault();
-    console.log(this.state.value)
-    this.props.addMovie(this.state.value)
-
+    this.props.findMovie(this.state.value)
   }
 
 

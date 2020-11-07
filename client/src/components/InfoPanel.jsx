@@ -38,15 +38,14 @@ class InfoPanel extends React.Component {
 
     var newMovieObj = {
       title: this.props.movie.title,
-      watched: this.state.watched,
       year: this.props.movie.year,
       runtime: this.props.movie.runtime,
-      metascore: this.props.movie.metascore,
       imdbRating: this.props.movie.imdbRating,
-      buttonStyle: this.state.buttonStyle
+      buttonStyle: this.state.buttonStyle,
+      watched: this.state.watched
     }
 
-    this.props.adjustWatched(newMovieObj, this.props.index)
+    this.props.adjustWatched(newMovieObj)
 
 
   }
@@ -56,7 +55,6 @@ class InfoPanel extends React.Component {
       <div>
         <span>Year:{this.props.movie.year}</span><br/>
         <span>Runtime:{this.props.movie.runtime}</span><br/>
-        <span>Metascore:{this.props.movie.metascore}</span><br/>
         <span>imdbRating:{this.props.movie.imdbRating}</span><br/>
         <span>Watched  <button className = {this.state.buttonStyle} onClick={this.toggleWatched} id='watched'></button>
         </span>

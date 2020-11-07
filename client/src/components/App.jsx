@@ -3,12 +3,7 @@ import MovieList from './MovieList.jsx'
 import Search from './Search.jsx'
 import AddMovie from './AddMovie.jsx'
 import WatchFilters from './WatchFilters.jsx'
-
-var movies = [
-  {title: "Mean Girls1", watched: 'false', year: '1995', runtime: '107 min' , metascore: 46, imdbRating: 6.2, buttonStyle: 'white_button'},
-  {title: "The Outsiders", watched: 'false', year: '1995', runtime: '107 min' , metascore: 46, imdbRating: 6.2, buttonStyle: 'white_button'},
-  {title: "Home Alone", watched: 'false', year: '1995', runtime: '107 min' , metascore: 46, imdbRating: 6.2, buttonStyle: 'white_button'}
-]
+import axios from 'axios';
 
 
 
@@ -18,71 +13,61 @@ class App extends React.Component {
     super(props);
 
     this.state = {
-      movies: movies,
-      renderedMovies: movies,
+      movies: [],
       movieId: '',
+      movieToAdd: {},
     }
     this.filter = this.filter.bind(this);
     this.addMovie = this.addMovie.bind(this);
     this.adjustWatched = this.adjustWatched.bind(this);
     this.watchFilter= this.watchFilter.bind(this);
+    this.findMovie = this.findMovie.bind(this);
+    this.fetchMovies = this.fetchMovies.bind(this);
   }
 
-
-
-
-
-
-//is this the proper way to get API information
-//how to be able to access without using states?
-  addMovie(movie) {
-
-    //search for movie ID
-    var urlMovieId = `https://api.themoviedb.org/3/search/movie?api_key=7fdb726f9ddada6e78cdde82cb44be0b&language=en-US&query=${movie}`
-    fetch(urlMovieId)
-    .then(res => res.json())
-    .then(
-      (result) => {
-        this.setState ({
-          movieId: result.results[0].id
-        }, () => {
-          var urlMovieDetails = `https://api.themoviedb.org/3/movie/${this.state.movieId}?api_key=7fdb726f9ddada6e78cdde82cb44be0b&language=en-US`
-          fetch(urlMovieDetails)
-          .then(res => res.json())
-          .then( (result) => {
-
-            var movieObj = {
-              title: result.title,
-              watched: 'false',
-              year: result.release_date.substring(0,4),
-              runtime: result.runtime,
-              metascore: 12.3,
-              imdbRating: result.vote_average,
-              buttonStyle: 'white_button'
-            }
-            const newMovieList = [...this.state.movies]
-            newMovieList.push(movieObj)
-            this.setState({
-              movies: newMovieList
-            })
-          })
+componentDidMount() {
+  this.fetchMovies();
+}
+//QUESTION: is it possible to chain get requests?  YES, but they still must be embedded
+//QUESTION: josh mentioned not having get requetsts on the client side, why is this so and should this go on server index.js or an entirely new file? this axios file should live in the server since on the client side, only a get/post request to the database should be occuring.
+  findMovie(movie) {
+    console.log('inside find movie', movie)
+    axios.get (`https://api.themoviedb.org/3/search/movie?api_key=7fdb726f9ddada6e78cdde82cb44be0b&language=en-US&query=${movie}`)
+      .then(({data}) => {
+        axios.get(`https://api.themoviedb.org/3/movie/${data.results[0].id}?api_key=7fdb726f9ddada6e78cdde82cb44be0b&language=en-US`)
+        .then(({data}) => {
+          var movieObj = {
+            title: data.title,
+            year: parseInt(data.release_date.substring(0,4)),
+            runtime: data.runtime,
+            imdbRating: data.vote_average,
+            buttonStyle: 'white_button',
+            watched: 'false',
+          }
+          this.addMovie(movieObj)
         })
-    },
-      (error) => {
+      })
+      .catch(function (error) {
         console.log(error)
-      }
-    )
-
-
-
-
-
+      });
 
   }
 
+  addMovie(movie) {
+    axios.post('/api/movies', movie)
+      .then(() => {
+        this.fetchMovies()
+      })
+  }
 
-
-
+  fetchMovies() {
+    axios.get('/api/movies')
+      .then(({data}) => {
+        this.setState({
+          movies: data
+        })
+      })
+  }
 
   filter(searchPhrase) {
     const filteredMovies = [];
@@ -98,23 +83,39 @@ class App extends React.Component {
 
   //takes in true or false
   watchFilter(watched) {
-    const filteredMovies = [];
-    for (var i = 0; i < this.state.movies.length; i++) {
-      if (this.state.movies[i].watched.toString() === watched) {
-        filteredMovies.push(this.state.movies[i]);
-      }
+    console.log('i made it into watch filter with:', watched)
+
+    if (watched === 'true') {
+      axios.get('/api/movies/watched')
+      .then(({data}) => {
+        console.log(data)
+        this.setState({
+          movies: data
+        })
+      });
     }
-    this.setState({
-      renderedMovies: filteredMovies,
-    })
+
+    if (watched === 'false') {
+      axios.get('/api/movies/toWatch')
+      .then(({data}) => {
+        console.log(data)
+        this.setState({
+          movies: data
+        })
+      });
+    }
+
+
+
   }
 
-  adjustWatched (movie, index) {
-    const newMovieList  = [...this.state.movies]
-    newMovieList.splice(index, 1, movie)
-    this.setState({
-      movies: newMovieList
-    })
+  adjustWatched (movie) {
+    console.log('i get to movie adjust watch with', movie)
+
+    axios.put('/api/movies', movie)
+      .then(() => {
+        this.fetchMovies()
+      })
   }
 
 
@@ -122,7 +123,7 @@ class App extends React.Component {
     return (
       <div>
       <h1>MovieList</h1>
-      <AddMovie addMovie = {this.addMovie}/>
+      <AddMovie findMovie = {this.findMovie}/>
       <WatchFilters watchFilter = {this.watchFilter}/>
       <Search filter={this.filter}/>
       <br/>
@@ -135,3 +136,44 @@ class App extends React.Component {
 }
 
 export default App;
+
+//QUESTION: is this the proper way to get API information or should I use axios?
+//QUESTION: how to be able to access get results without using states?
+  // addMovie(movie) {
+
+  //   //search for movie ID
+  //   var urlMovieId = `https://api.themoviedb.org/3/search/movie?api_key=7fdb726f9ddada6e78cdde82cb44be0b&language=en-US&query=${movie}`
+  //   fetch(urlMovieId)
+  //   .then(res => res.json())
+  //   .then(
+  //     (result) => {
+  //       this.setState ({
+  //         movieId: result.results[0].id
+  //       }, () => {
+  //         var urlMovieDetails = `https://api.themoviedb.org/3/movie/${this.state.movieId}?api_key=7fdb726f9ddada6e78cdde82cb44be0b&language=en-US`
+  //         fetch(urlMovieDetails)
+  //         .then(res => res.json())
+  //         .then( (result) => {
+
+  //           var movieObj = {
+  //             title: result.title,
+  //             watched: 'false',
+  //             year: result.release_date.substring(0,4),
+  //             runtime: result.runtime,
+  //             metascore: 12.3,
+  //             imdbRating: result.vote_average,
+  //             buttonStyle: 'white_button'
+  //           }
+  //           const newMovieList = [...this.state.movies]
+  //           newMovieList.push(movieObj)
+  //           this.setState({
+  //             movies: newMovieList
+  //           })
+  //         })
+  //       })
+  //   },
+  //     (error) => {
+  //       console.log(error)
+  //     }
+  //   )
+  // }
