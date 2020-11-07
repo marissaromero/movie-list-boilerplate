@@ -16,11 +16,11 @@ class WatchedButton extends React.Component {
 
   toggleWatched () {
     //toggle true of false
-    console.log('initial watch status:', this.state.watched, typeof this.state.watched)
+
     this.setState ({
       watched: !this.state.watched
     })
-    console.log('after watch status:', this.state.watched, typeof this.state.watched)
+
     if (this.state.watched) {
       this.setState ({
         buttonStyle: 'green_button'
@@ -32,7 +32,7 @@ class WatchedButton extends React.Component {
     }
 
     var newMovieObj = {title: this.props.title, watched: this.state.watched, runtime: this.props.runtime, imdbRating: this.props.imdbRating, year: this.props.year}
-    this.props.adjustWatched(newMovieObj, this.props.index)
+    this.props.adjustWatched(newMovieObj)
   }
 
   render ()  {

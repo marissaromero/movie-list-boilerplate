@@ -14,8 +14,7 @@ class App extends React.Component {
 
     this.state = {
       movies: [],
-      movieId: '',
-      movieToAdd: {},
+      movieId: ''
     }
     this.filter = this.filter.bind(this);
     this.addMovie = this.addMovie.bind(this);
@@ -67,17 +66,18 @@ componentDidMount() {
           movies: data
         })
       })
+    console.log(this.state.movies)
   }
 
   filter(searchPhrase) {
-    const filteredMovies = [];
-    for (var i = 0; i < this.state.movies.length; i++) {
-      if (this.state.movies[i].title.includes(searchPhrase)) {
-        filteredMovies.push(this.state.movies[i]);
-      }
-    }
-    this.setState({
-      renderedMovies: filteredMovies,
+
+    console.log('i am right before search', searchPhrase)
+
+    axios.post('/api/movies/search', searchPhrase)
+    .then(({data}) => {
+      this.setState({
+        movies: data
+      })
     })
   }
 
@@ -85,33 +85,33 @@ componentDidMount() {
   watchFilter(watched) {
     console.log('i made it into watch filter with:', watched)
 
-    if (watched === 'true') {
+    if (watched.term === 'true') {
       axios.get('/api/movies/watched')
       .then(({data}) => {
-        console.log(data)
         this.setState({
           movies: data
         })
+        console.log(this.state.movies)
       });
-    }
 
-    if (watched === 'false') {
+    } else {
       axios.get('/api/movies/toWatch')
       .then(({data}) => {
-        console.log(data)
         this.setState({
           movies: data
         })
+        console.log(this.state.movies)
       });
+
     }
+
+
 
 
 
   }
 
   adjustWatched (movie) {
-    console.log('i get to movie adjust watch with', movie)
-
     axios.put('/api/movies', movie)
       .then(() => {
         this.fetchMovies()

@@ -20,8 +20,9 @@ class Search extends React.Component {
   }
 
   handleSubmit(event) {
-    this.props.filter(this.state.value)
-    //event.preventDefault();
+    event.preventDefault();
+    var searchObj = {search: this.state.value}
+    this.props.filter(searchObj)
   }
 
   render () {

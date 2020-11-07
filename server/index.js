@@ -57,6 +57,25 @@ app.get('/api/movies/toWatch', (req, res) => {
 
 })
 
+app.post('/api/movies/search', (req, res) => {
+
+  console.log('i have made it to search', req.body.search)
+
+
+  const sql = `SELECT * FROM movies WHERE title LIKE '%${req.body.search}%'`;
+
+  db.query(sql, (err, data) => {
+    if (err) {
+      console.log(err);
+      res.send(500);
+    } else {
+      res.send(data);
+    }
+  })
+
+})
+//
+
 app.post('/api/movies', (req, res) => {
 
   const movie = [req.body.title, req.body.year, req.body.runtime, req.body.imdbRating, req.body.buttonStyle, req.body.watched]

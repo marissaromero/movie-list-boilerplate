@@ -9,7 +9,8 @@ class WatchFilters extends React.Component {
   }
 
   runFilter (event) {
-    this.props.watchFilter(event.target.value)
+    var filter = {term: event.target.value}
+    this.props.watchFilter(filter)
   }
 
 
